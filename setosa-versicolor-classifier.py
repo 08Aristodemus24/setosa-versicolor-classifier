@@ -1,12 +1,13 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sn
+import matplotlib as mpl
 import pandas as pd
 
 from sklearn import datasets
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score
+from sklearn.utils.multiclass import unique_labels
 
 # load and organize dataset
 # get x values and get y Values
@@ -86,9 +87,24 @@ print(cm)
 accuracy = accuracy_score(y_tests, y_pred)
 
 # figure 3
-fig_3 = plt.figure(figsize=(7, 5))
-sn.heatmap(cm, annot=True)
+fig_3, ax_3 = plt.subplots()
+im = ax_3.imshow(cm, cmap='magma')
 
+# Show all ticks and label them with the respective list entries
+ax_3.set_xticks(np.arange(cm.shape[0]), labels=unique_labels(y))
+ax_3.set_yticks(np.arange(cm.shape[1]), labels=unique_labels(y))
+
+# Rotate the tick labels and set their alignment.
+plt.setp(ax_3.get_xticklabels(), rotation=45, ha="right",
+         rotation_mode="anchor")
+
+# Loop over data dimensions and create text annotations.
+for i in range(cm.shape[0]):
+    for j in range(cm.shape[1]):
+        text = ax_3.text(j, i, cm[i, j], ha="center", va="center", color="#3274bf")
+
+ax_3.set_title("correctly classified")
+fig_3.tight_layout()
 plt.show()
 
 
